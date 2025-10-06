@@ -10,5 +10,4 @@ import { NavBarComponent } from './shared/components/nav-bar/nav-bar.component';
   styleUrl: './app.scss',
 })
 export class App {
-  protected readonly title = signal('dynamic-forms');
 }

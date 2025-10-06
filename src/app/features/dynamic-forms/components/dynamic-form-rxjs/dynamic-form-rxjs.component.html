@@ -1,0 +1,22 @@
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <!-- Usando async pipe para suscribirse automáticamente -->
+  @if (!(loading$ | async)) {
+  <h2>{{ formName$ | async }}</h2>
+
+  <!-- Formly maneja el layout directamente con className y fieldGroupClassName -->
+  <formly-form [form]="form" [fields]="(fields$ | async) || []" [model]="model"> </formly-form>
+
+  } @else {
+  <p>⏳ Cargando formulario...</p>
+  }
+
+  <!-- Mostrar errores si existen -->
+  @if (error$ | async; as error) {
+  <div class="error-message">
+    <mat-icon>error</mat-icon>
+    <span>{{ error }}</span>
+  </div>
+  }
+
+  <button matButton="filled" type="submit" [disabled]="(loading$ | async) || false">Send</button>
+</form>

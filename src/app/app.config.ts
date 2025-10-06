@@ -6,12 +6,12 @@ import {
 } from '@angular/core';
 import { provideHttpClient } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
-import { ReactiveFormsModule } from '@angular/forms';
-import { FormlyModule } from '@ngx-formly/core';
-import { FormlyMaterialModule } from '@ngx-formly/material';
 import { provideAnimations } from '@angular/platform-browser/animations';
-
 import { routes } from './app.routes';
+import { FormlyModule } from '@ngx-formly/core';
+// import { formlyValidationConfig } from './shared/formly/formly.config';
+import { provideFormlyCore } from '@ngx-formly/core';
+import { FormlyMaterialModule } from '@ngx-formly/material';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -20,6 +20,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideHttpClient(),
     provideAnimations(),
-    importProvidersFrom(ReactiveFormsModule, FormlyModule.forRoot(), FormlyMaterialModule),
+    // provideFormlyCore(formlyValidationConfig),
+    // importProvidersFrom(FormlyMaterialModule),
   ],
 };

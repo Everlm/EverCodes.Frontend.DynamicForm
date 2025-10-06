@@ -1,18 +1,13 @@
 <form [formGroup]="form" (ngSubmit)="submit()">
   @if (!store.loading()) {
-    <h2>{{ store.formName() }}</h2>
+  <h2>{{ store.formName() }}</h2>
 
-    <div class="form-fields-container">
-      <formly-form [form]="form" [fields]="store.fields()" [model]="model"></formly-form>
-    </div>
+  <!-- Formly maneja el layout directamente con className y fieldGroupClassName -->
+  <formly-form [form]="form" [fields]="fields()" [model]="model"></formly-form>
+
   } @else {
-    <p>⏳ Cargando formulario...</p>
+  <p>⏳ Cargando formulario...</p>
   }
-  <div class="form-actions">
-    <button mat-raised-button color="primary" type="submit">Enviar Formulario</button>
-  </div>
 
-  <ng-template #loadingTpl>
-    <p>⏳ Cargando formulario...</p>
-  </ng-template>
+  <button matButton="filled" type="submit">Send</button>
 </form>

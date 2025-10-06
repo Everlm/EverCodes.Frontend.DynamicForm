@@ -1,123 +1,130 @@
 # 📋 EverCodes Dynamic Forms
 
-Aplicación Angular 20 para generar formularios dinámicos a partir de definiciones JSON usando **ngx-formly** con **Angular Material**.
+Aplicación Angular 18+ para generar formularios dinámicos a partir de definiciones JSON usando **ngx-formly** con **Angular Material**. Incluye dos implementaciones: **Signals** (moderno) y **RxJS** (clásico) para comparación.
 
 ## 🚀 Inicio Rápido
 
-### Requisitos
-- Node.js 18+ 
-- Angular CLI 20+
-
-### Instalación y Ejecución
-
 ```bash
-# Instalar dependencias
-npm install
-
-# Ejecutar en desarrollo
-npm start
-# La app estará en http://localhost:4200
+npm install    # Instalar dependencias
+npm start      # Ejecutar en desarrollo (http://localhost:4200)
 ```
 
 ## 🏗️ Tecnologías
 
-- **Angular 20** - Framework principal
-- **ngx-formly 7** - Generación de formularios dinámicos
+- **Angular 18+** - Standalone components, control flow
+- **ngx-formly v6+** - Formularios dinámicos con grid layout
 - **Angular Material** - Componentes UI
-- **TypeScript 5.9** - Lenguaje
-- **Signals** - Manejo de estado reactivo
+- **Signals + RxJS** - Dos enfoques de manejo de estado
+- **TypeScript** - Strict mode
 
 ## 📂 Estructura
 
 ```
-src/
-├── app/
-│   ├── features/
-│   │   └── dynamic-forms/
-│   │       ├── components/
-│   │       │   └── dynamic-form/         # Componente principal del formulario
-│   │       ├── models/                   # Interfaces TypeScript
-│   │       └── services/
-│   │           └── form-definition.store.ts  # Store con Signals
-│   └── shared/
-│       └── components/
-│           └── nav-bar/                  # Barra de navegación
+src/app/
+├── features/dynamic-forms/
+│   ├── components/
+│   │   ├── dynamic-form/              # Componente con Signals
+│   │   └── dynamic-form-rxjs/         # Componente con RxJS
+│   ├── services/
+│   │   ├── form-definition.store.ts   # Store con Signals
+│   │   └── form-definition-rxjs.service.ts  # Service con RxJS
+│   └── mock-data/
+│       ├── form-definitions.mock.ts   # Datos de prueba
+│       └── layout-examples.mock.ts    # Ejemplos de layouts
+└── shared/
+    ├── components/nav-bar/            # Navegación entre versiones
+    └── formly/
+        ├── formly.config.ts           # Configuración de Formly
+        ├── validation-messages.ts     # Mensajes centralizados
+        └── form-field-processor.service.ts  # Auto-procesamiento
 ```
 
-## ⚙️ Configuración del API
+## ⚙️ Formato JSON del Servidor
 
-El formulario consume un endpoint REST que debe devolver:
+**Estructura con Grid Layout (Recomendado):**
 
 ```json
 {
   "formName": "User Registration",
   "fields": [
     {
-      "key": "username",
-      "type": "input",
-      "templateOptions": {
-        "label": "Username",
-        "required": true,
-        "minLength": 3,
-        "maxLength": 20,
-        "type": "text",
-        "placeholder": "Ingrese su usuario",
-        "options": null
-      }
+      "fieldGroupClassName": "display-grid",
+      "fieldGroup": [
+        {
+          "key": "username",
+          "type": "input",
+          "className": "col-6",
+          "props": {
+            "label": "Username",
+            "required": true,
+            "minLength": 3,
+            "placeholder": "Ingrese su usuario"
+          }
+        }
+      ]
     }
   ]
 }
 ```
 
-**Endpoint por defecto:** `https://localhost:7261/api/DynamicForm/get-form-definition`
+**Propiedades clave:**
+- `props` - Configuración del campo (en lugar de `templateOptions`)
+- `fieldGroupClassName: "display-grid"` - Activa el sistema de grid
+- `className: "col-X"` - Define el ancho (col-6 = 50%, col-12 = 100%)
 
-Para cambiar la URL del API, edita: `src/app/features/dynamic-forms/services/form-definition.store.ts`
+**Endpoint:** `https://localhost:7261/api/DynamicForm/get-form-definition`
 
-## 🎨 Tipos de Campo Soportados
+## ✨ Características
 
-### Campos de Material (ngx-formly/material)
+### 🎯 Grid Layout Flexible
+- Sistema de **12 columnas** (como Bootstrap)
+- Configurable desde el JSON del servidor
+- **Responsive automático** (1 columna en móvil)
+- Layouts mixtos en el mismo formulario
 
-- `input` - Campo de texto
-- `textarea` - Área de texto
-- `select` - Selector dropdown
-- `checkbox` - Casilla de verificación
-- `radio` - Botones de radio
-- `datepicker` - Selector de fecha
+### 🔄 Dos Implementaciones
+- **⚡ Signals** (`/dynamic-form`) - Enfoque moderno de Angular
+- **🔄 RxJS** (`/dynamic-form/rxjs`) - Enfoque tradicional con Observables
 
-## 📱 Diseño Responsive
+### ✅ Validaciones
+- **Mensajes centralizados** en `validation-messages.ts`
+- **Auto-procesamiento** de validaciones desde el servidor
+- Soporte para mensajes personalizados por campo
+- Validaciones: required, minLength, maxLength, email, pattern, min, max
 
-- **Paleta de colores:** Grises y azules neutros
-- **Navegación:** Sticky navbar con gradiente
-- **Formulario:** Diseño moderno con sombras y bordes redondeados
-- **Adaptable:** Se ajusta a móviles y tablets
+### 📱 Diseño
+- Material Design con Angular Material
+- Responsive (desktop: grid flexible, móvil: 1 columna)
+- Animaciones y transiciones suaves
 
-## 🛠️ Comandos Disponibles
+## 🎨 Ejemplos de Grid Layout
 
-```bash
-# Desarrollo
-npm start              # Servidor de desarrollo
+```json
+// 50% + 50%
+"className": "col-6"
 
-# Build
-npm run build          # Build de producción en /dist
+// 33% + 33% + 33%
+"className": "col-4"
 
-# Testing
-npm test               # Ejecutar tests con Karma
+// 66% + 33%
+"className": "col-8" y "col-4"
 
-# Watch mode
-npm run watch          # Build en modo watch
+// 100%
+"className": "col-12"
 ```
 
-## 📝 Ejemplo de Uso
+## � Rutas
 
-1. El backend devuelve la definición del formulario
-2. `FormDefinitionStore` carga y almacena la configuración usando Signals
-3. El componente `dynamic-form` renderiza el formulario con `formly-form`
-4. Al enviar, los datos se validan y procesan
+- **`/`** - Formulario con Signals
+- **`/rxjs`** - Formulario con RxJS
 
-## 🔗 Rutas
+Navega entre versiones usando la barra superior.
 
-- `/` - Página principal
-- `/dynamic-form` - Formulario dinámico
+## � Documentación
+
+- `layout-examples.mock.ts` - 7 ejemplos de layouts diferentes
+- `form-definitions.mock.ts` - Datos de prueba con grid
+- Componentes incluyen README.md con documentación
 
 ## 📄 Licencia
 

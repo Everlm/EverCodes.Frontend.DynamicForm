@@ -1,8 +1,21 @@
 <nav>
-  <h2>NavBar</h2>
+  <h2>Dynamic Forms - Angular</h2>
   <div class="menu">
     <ul>
-     <li><a routerLink="/dynamic-form" routerLinkActive="active">Formulario dinámico</a></li>
+      <li>
+        <a routerLink="/dynamic-form/signals" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+          <span class="icon">⚡</span>
+          <span class="text">Signals</span>
+          <span class="badge badge-new">Moderno</span>
+        </a>
+      </li>
+      <li>
+        <a routerLink="/dynamic-form/rxjs" routerLinkActive="active">
+          <span class="icon">🔄</span>
+          <span class="text">RxJS</span>
+          <span class="badge badge-classic">Clásico</span>
+        </a>
+      </li>
     </ul>
   </div>
 </nav>
