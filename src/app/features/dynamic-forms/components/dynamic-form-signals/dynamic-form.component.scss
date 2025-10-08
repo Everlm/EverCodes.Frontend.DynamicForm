@@ -204,8 +204,6 @@ form {
 
   // ==================== FORMLY GRID SYSTEM ====================
   // Sistema de grid de 12 columnas controlado por className en el JSON
-  // Usa fieldGroupClassName: 'display-grid' y className: 'col-X' en tus fields
-
   ::ng-deep .display-grid {
     display: grid;
     grid-template-columns: repeat(12, 1fr);

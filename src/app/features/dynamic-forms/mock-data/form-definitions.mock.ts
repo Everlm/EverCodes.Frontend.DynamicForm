@@ -7,6 +7,8 @@
  */
 
 export const MOCK_FORM_DEFINITION = {
+  id: '123e4567-e89b-12d3-a456-426614174000',
+  version: 1,
   formName: "Formulario de Registro Completo",
   fields: [
     // ========== GRUPO CON GRID: 2 COLUMNAS ==========

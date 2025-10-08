@@ -1,17 +1,66 @@
 nav {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  // 🌊 Liquid Glass Effect (Gris Moderno)
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+
+  // Gradiente gris sutil sobre el blur
+  background-image:
+    linear-gradient(
+      135deg,
+      rgba(148, 163, 184, 0.12) 0%,
+      rgba(71, 85, 105, 0.12) 100%
+    );
+
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-top: none;
+  border-left: none;
+  border-right: none;
+
   padding: 1rem 2rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  // Sombra suave y difuminada
+  box-shadow:
+    0 8px 32px rgba(15, 23, 42, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+
   position: sticky;
   top: 0;
   z-index: 1000;
 
+  // Animación suave al hacer scroll
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.3),
+      transparent
+    );
+  }
+
   h2 {
-    color: #ffffff;
+    color: #0f172a;
     font-size: 1.5rem;
-    font-weight: 600;
+    font-weight: 700;
     margin: 0 0 0.75rem 0;
-    letter-spacing: 0.5px;
+    letter-spacing: -0.02em;
+
+    // Gradiente gris en el texto
+    background: linear-gradient(135deg, #1e293b 0%, #475569 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+
+    // Sombra de texto sutil
+    filter: drop-shadow(0 2px 4px rgba(15, 23, 42, 0.1));
   }
 
   .menu {
@@ -20,60 +69,130 @@ nav {
       margin: 0;
       padding: 0;
       display: flex;
-      gap: 1.5rem;
+      gap: 0.75rem;
 
       li {
         a {
-          color: #e0e7ff;
+          color: #475569;
           text-decoration: none;
-          font-size: 1rem;
-          font-weight: 500;
-          padding: 0.5rem 1rem;
-          border-radius: 6px;
-          transition: all 0.3s ease;
+          font-size: 0.95rem;
+          font-weight: 600;
+          padding: 0.625rem 1.25rem;
+          border-radius: 12px;
+
+          // Glass effect para los links
+          background: rgba(255, 255, 255, 0.4);
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
+
+          border: 1px solid rgba(255, 255, 255, 0.3);
+
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
           display: flex;
           align-items: center;
           gap: 0.5rem;
 
+          // Sombra interna sutil
+          box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.5),
+            0 2px 8px rgba(0, 0, 0, 0.04);
+
           .icon {
-            font-size: 1.25rem;
+            font-size: 1.15rem;
+            opacity: 0.8;
+            transition: all 0.3s ease;
           }
 
           .text {
             font-weight: 600;
+            letter-spacing: -0.01em;
           }
 
           .badge {
             font-size: 0.7rem;
-            padding: 0.15rem 0.5rem;
-            border-radius: 12px;
-            font-weight: 600;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-weight: 700;
             margin-left: auto;
+            letter-spacing: 0.02em;
+
+            // Glass effect para badges
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+
+            box-shadow:
+              0 2px 8px rgba(15, 23, 42, 0.1),
+              inset 0 1px 0 rgba(255, 255, 255, 0.2);
 
             &.badge-new {
-              background-color: #10b981;
+              background: rgba(71, 85, 105, 0.85);
               color: #ffffff;
+              border: 1px solid rgba(255, 255, 255, 0.3);
             }
 
             &.badge-classic {
-              background-color: #f59e0b;
+              background: rgba(100, 116, 139, 0.85);
               color: #ffffff;
+              border: 1px solid rgba(255, 255, 255, 0.3);
             }
           }
 
+          // Hover effect con glass más intenso
           &:hover {
-            background-color: rgba(255, 255, 255, 0.15);
-            color: #ffffff;
-            transform: translateY(-2px);
-          }
+            background: rgba(255, 255, 255, 0.65);
+            color: #0f172a;
+            transform: translateY(-2px) scale(1.02);
 
-          &.active {
-            background-color: rgba(255, 255, 255, 0.25);
-            color: #ffffff;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+
+            box-shadow:
+              0 8px 24px rgba(71, 85, 105, 0.15),
+              inset 0 1px 0 rgba(255, 255, 255, 0.6);
+
+            .icon {
+              opacity: 1;
+              transform: scale(1.1);
+            }
 
             .badge {
-              box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+              transform: scale(1.05);
+              box-shadow:
+                0 4px 12px rgba(15, 23, 42, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            }
+          }
+
+          // Active state con efecto líquido (gris)
+          &.active {
+            background: linear-gradient(
+              135deg,
+              rgba(71, 85, 105, 0.25) 0%,
+              rgba(51, 65, 85, 0.25) 100%
+            );
+
+            backdrop-filter: blur(20px) saturate(150%);
+            -webkit-backdrop-filter: blur(20px) saturate(150%);
+
+            color: #0f172a;
+            font-weight: 700;
+
+            border: 1px solid rgba(71, 85, 105, 0.3);
+
+            box-shadow:
+              0 8px 24px rgba(71, 85, 105, 0.2),
+              inset 0 2px 4px rgba(255, 255, 255, 0.2),
+              inset 0 -2px 4px rgba(71, 85, 105, 0.1);
+
+            .icon {
+              opacity: 1;
+              color: #334155;
+            }
+
+            .badge {
+              transform: scale(1.05);
+              box-shadow:
+                0 4px 12px rgba(15, 23, 42, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
             }
           }
         }
@@ -82,17 +201,59 @@ nav {
   }
 }
 
+// 🌈 Efecto de brillo al hacer scroll (opcional)
+nav.scrolled {
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(50px) saturate(200%);
+  -webkit-backdrop-filter: blur(50px) saturate(200%);
+
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+// 📱 Responsive
 @media (max-width: 768px) {
   nav {
     padding: 1rem;
+    backdrop-filter: blur(30px) saturate(180%);
 
     h2 {
       font-size: 1.25rem;
+      margin-bottom: 0.5rem;
     }
 
     .menu ul {
       flex-direction: column;
       gap: 0.5rem;
+
+      li a {
+        padding: 0.75rem 1rem;
+        justify-content: flex-start;
+
+        .badge {
+          margin-left: auto;
+        }
+      }
     }
   }
 }
+
+// 🎨 Animación de entrada suave
+@keyframes fadeInGlass {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+    backdrop-filter: blur(0px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    backdrop-filter: blur(40px);
+  }
+}
+
+nav {
+  animation: fadeInGlass 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+

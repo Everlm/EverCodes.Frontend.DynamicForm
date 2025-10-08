@@ -4,7 +4,7 @@ export const DYNAMIC_FORM_ROUTES: Routes = [
   {
     path: 'signals',
     loadComponent: () =>
-      import('./components/dynamic-form/dynamic-form.component').then(
+      import('./components/dynamic-form-signals/dynamic-form.component').then(
         (m) => m.DynamicFormComponent
       ),
   },

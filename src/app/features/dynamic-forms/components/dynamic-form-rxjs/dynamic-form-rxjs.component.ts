@@ -7,7 +7,7 @@ import { FormlyMaterialModule } from '@ngx-formly/material';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil, BehaviorSubject, combineLatest, map, delay } from 'rxjs';
 import { FormDefinitionRxjsService } from '../../services/form-definition-rxjs.service';
 
 /**
@@ -39,15 +39,33 @@ export class DynamicFormRxjsComponent implements OnInit, OnDestroy {
   private service = inject(FormDefinitionRxjsService);
   private destroy$ = new Subject<void>();
 
+  // 🎯 Subject para controlar el delay mínimo de visualización del loading
+  private minimumLoadingTime = 800; // ms
+  private showLoading$ = new BehaviorSubject<boolean>(true);
+
   // ==================== FORM STATE ====================
   form = new FormGroup({});
   model: any = {};
 
   // ==================== OBSERVABLES (para template con async pipe) ====================
-  loading$ = this.service.loading$;
+  // 🔹 Observable combinado que mantiene el loading visible por el tiempo mínimo
+  loading$ = combineLatest([
+    this.service.loading$,
+    this.showLoading$
+  ]).pipe(
+    map(([serviceLoading, minimumLoading]) => serviceLoading || minimumLoading)
+  );
   formName$ = this.service.formName$;
   fields$ = this.service.fields$;
   error$ = this.service.error$;
+  lastUpdated$ = this.service.lastUpdated$;
+
+  // Observables derivados
+  hasData$ = this.service.hasData$;
+  hasError$ = this.service.hasError$;
+  isReady$ = this.service.isReady$;
+  fieldCount$ = this.service.fieldCount$;
+  formStats$ = this.service.formStats$;
 
   // ==================== LOCAL STATE (opcional - para suscripción manual) ====================
   // Descomentarlos si prefieres trabajar con valores síncronos
@@ -59,13 +77,26 @@ export class DynamicFormRxjsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadFormData();
+
+    // ⏱️ Mantener el loading visible por un tiempo mínimo para evitar el flash
+    setTimeout(() => {
+      this.showLoading$.next(false);
+    }, this.minimumLoadingTime);
   }
 
   ngOnDestroy(): void {
     this.cleanupSubscriptions();
+    this.showLoading$.complete();
   }
 
   // ==================== PUBLIC METHODS ====================
+
+  /**
+   * Reintentar carga después de error
+   */
+  retry(): void {
+    this.service.retry();
+  }
 
   /**
    * Maneja el envío del formulario
@@ -128,15 +159,34 @@ export class DynamicFormRxjsComponent implements OnInit, OnDestroy {
    * Envía los datos del formulario al servidor
    */
   private submitFormData(): void {
-    console.log('✅ Datos válidos', this.model);
+    // ✅ Formulario válido - Imprimir JSON formateado
+    console.log('✅ ========== FORMULARIO ENVIADO EXITOSAMENTE ==========');
 
-    this.service
-      .submitFormData(this.model)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (response) => this.handleSubmitSuccess(response),
-        error: (err) => this.handleSubmitError(err),
-      });
+    // Obtener el nombre del formulario
+    this.formName$.pipe(takeUntil(this.destroy$)).subscribe(formName => {
+      console.log('📝 Nombre del formulario:', formName);
+    });
+
+    console.log('📋 Datos del formulario (JSON):');
+    console.log(JSON.stringify(this.model, null, 2));
+
+    // Mostrar estadísticas del formulario
+    this.formStats$.pipe(takeUntil(this.destroy$)).subscribe(stats => {
+      console.log('📊 Estadísticas del formulario:', stats);
+    });
+
+    console.log('✅ ====================================================');
+
+    // También mostrar en formato de tabla para mejor visualización
+    console.table(this.model);
+
+    // this.service
+    //   .submitFormData(this.model)
+    //   .pipe(takeUntil(this.destroy$))
+    //   .subscribe({
+    //     next: (response) => this.handleSubmitSuccess(response),
+    //     error: (err) => this.handleSubmitError(err),
+    //   });
   }
 
   /**

@@ -1,0 +1,192 @@
+footer {
+  // 🌊 Liquid Glass Effect (Gris Moderno)
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+
+  // Gradiente gris sutil sobre el blur
+  background-image:
+    linear-gradient(
+      135deg,
+      rgba(148, 163, 184, 0.12) 0%,
+      rgba(71, 85, 105, 0.12) 100%
+    );
+
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-bottom: none;
+  border-left: none;
+  border-right: none;
+
+  padding: 3rem 2rem 1.5rem;
+  margin-top: auto;
+
+  // Sombra suave y difuminada
+  box-shadow:
+    0 -8px 32px rgba(15, 23, 42, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.3),
+      transparent
+    );
+  }
+
+  .footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+
+    .footer-section {
+      h3 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin: 0 0 0.75rem 0;
+        letter-spacing: -0.02em;
+
+        // Gradiente gris en el texto
+        background: linear-gradient(135deg, #1e293b 0%, #475569 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+
+        filter: drop-shadow(0 2px 4px rgba(15, 23, 42, 0.1));
+      }
+
+      h4 {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #334155;
+        margin: 0 0 0.75rem 0;
+        letter-spacing: -0.01em;
+      }
+
+      p {
+        color: #64748b;
+        font-size: 0.9rem;
+        line-height: 1.6;
+        margin: 0;
+      }
+
+      ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+
+        li {
+          margin-bottom: 0.5rem;
+          color: #64748b;
+          font-size: 0.9rem;
+          transition: all 0.3s ease;
+
+          a {
+            color: #64748b;
+            text-decoration: none;
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+            display: inline-block;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+            &:hover {
+              color: #0f172a;
+              background: rgba(71, 85, 105, 0.1);
+              transform: translateX(4px);
+            }
+          }
+        }
+      }
+
+      .contact-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+
+        span {
+          display: block;
+          font-size: 0.9rem;
+        }
+      }
+    }
+  }
+
+  .footer-bottom {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    text-align: center;
+
+    p {
+      color: #64748b;
+      font-size: 0.85rem;
+      margin: 0.25rem 0;
+    }
+
+    .made-with {
+      font-weight: 600;
+      background: linear-gradient(135deg, #1e293b 0%, #475569 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+  }
+}
+
+// 📱 Responsive
+@media (max-width: 768px) {
+  footer {
+    padding: 2rem 1rem 1rem;
+
+    .footer-content {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+
+      .footer-section {
+        h3 {
+          font-size: 1.25rem;
+        }
+
+        h4 {
+          font-size: 0.95rem;
+        }
+      }
+    }
+
+    .footer-bottom {
+      padding-top: 1.5rem;
+
+      p {
+        font-size: 0.8rem;
+      }
+    }
+  }
+}
+
+// 🎨 Animación de entrada
+@keyframes fadeInFooter {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+footer {
+  animation: fadeInFooter 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.2s both;
+}
