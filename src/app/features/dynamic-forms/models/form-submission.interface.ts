@@ -1,10 +1,7 @@
 /**
- * 💾 Interfaces para Persistencia de Formularios
- *
- * Separa la definición del formulario (metadatos) de los datos ingresados por el usuario.
- *
  * @see PERSISTENCE_STRUCTURE_ANALYSIS.md para documentación completa
  */
+
 
 /**
  * Representa UNA respuesta/envío de un formulario por parte de un usuario.

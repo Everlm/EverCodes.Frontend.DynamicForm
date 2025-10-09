@@ -1,25 +1,25 @@
 <div class="form-container">
-  <!-- 🎯 Estado de carga con delay mínimo para evitar flash -->
+  <!-- Estado de carga con delay mínimo para evitar flash -->
   @if (isLoading()) {
   <div class="loading-state">
     <p>⏳ Cargando formulario...</p>
   </div>
   }
 
-  <!-- ❌ Estado de error con opción de reintentar -->
+  <!-- Estado de error con opción de reintentar -->
   @else if (store.hasError()) {
   <div class="error-state">
     <mat-icon color="warn">error</mat-icon>
     <h3>Error al cargar el formulario</h3>
     <p>{{ store.error() }}</p>
-    <button mat-raised-button color="primary" (click)="store.retry()">
+    <button mat-raised-button color="primary" (click)="retry()">
       <mat-icon>refresh</mat-icon>
       Reintentar
     </button>
   </div>
   }
 
-  <!-- ✅ Formulario cargado correctamente -->
+  <!--Formulario cargado correctamente -->
   @else if (store.isReady()) {
   <form [formGroup]="form" (ngSubmit)="submit()">
     <!-- Header con información del formulario -->

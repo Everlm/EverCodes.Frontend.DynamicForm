@@ -1,57 +1,55 @@
 <div class="form-container">
-  <!-- 🎯 Estado de carga con delay mínimo para evitar flash -->
+  <!-- Estado de carga con delay mínimo para evitar flash -->
   @if (loading$ | async) {
-    <div class="loading-state">
-      <p>⏳ Cargando formulario...</p>
-    </div>
+  <div class="loading-state">
+    <p>⏳ Cargando formulario...</p>
+  </div>
   }
 
-  <!-- ❌ Estado de error con opción de reintentar -->
+  <!-- Estado de error con opción de reintentar -->
   @else if (hasError$ | async) {
-    <div class="error-state">
-      <mat-icon color="warn">error</mat-icon>
-      <h3>Error al cargar el formulario</h3>
-      <p>{{ error$ | async }}</p>
-      <button mat-raised-button color="primary" (click)="retry()">
-        <mat-icon>refresh</mat-icon>
-        Reintentar
+  <div class="error-state">
+    <mat-icon color="warn">error</mat-icon>
+    <h3>Error al cargar el formulario</h3>
+    <p>{{ error$ | async }}</p>
+    <button mat-raised-button color="primary" (click)="retry()">
+      <mat-icon>refresh</mat-icon>
+      Reintentar
+    </button>
+  </div>
+  }
+
+  <!-- Formulario cargado correctamente -->
+  @else if (isReady$ | async) {
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <!-- Header con información del formulario -->
+    <div class="form-header">
+      <h2>{{ formName$ | async }}</h2>
+      <div class="form-info">
+        <span class="field-count">{{ fieldCount$ | async }} campos</span>
+        @if (lastUpdated$ | async; as lastUpdate) {
+        <small class="last-updated"> Actualizado: {{ lastUpdate | date : 'short' }} </small>
+        }
+      </div>
+    </div>
+
+    <!-- Formly maneja el layout directamente -->
+    <formly-form [form]="form" [fields]="(fields$ | async) || []" [model]="model"></formly-form>
+
+    <!-- Botón de envío -->
+    <div class="form-actions">
+      <button matButton="filled" type="submit" [disabled]="(loading$ | async) || false">
+        <mat-icon>send</mat-icon>
+        Enviar
       </button>
     </div>
+  </form>
   }
 
-  <!-- ✅ Formulario cargado correctamente -->
-  @else if (isReady$ | async) {
-    <form [formGroup]="form" (ngSubmit)="submit()">
-      <!-- Header con información del formulario -->
-      <div class="form-header">
-        <h2>{{ formName$ | async }}</h2>
-        <div class="form-info">
-          <span class="field-count">{{ fieldCount$ | async }} campos</span>
-          @if (lastUpdated$ | async; as lastUpdate) {
-            <small class="last-updated">
-              Actualizado: {{ lastUpdate | date:'short' }}
-            </small>
-          }
-        </div>
-      </div>
-
-      <!-- Formly maneja el layout directamente -->
-      <formly-form [form]="form" [fields]="(fields$ | async) || []" [model]="model"></formly-form>
-
-      <!-- Botón de envío -->
-      <div class="form-actions">
-        <button matButton="filled" type="submit" [disabled]="(loading$ | async) || false">
-          <mat-icon>send</mat-icon>
-          Enviar
-        </button>
-      </div>
-    </form>
-  }
-
-  <!-- Estado vacío (no debería ocurrir normalmente) -->
+  <!-- Estado vacío -->
   @else {
-    <div class="empty-state">
-      <p>No hay formulario disponible</p>
-    </div>
+  <div class="empty-state">
+    <p>No hay formulario disponible</p>
+  </div>
   }
 </div>

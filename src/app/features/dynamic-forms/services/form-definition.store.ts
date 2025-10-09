@@ -3,27 +3,16 @@ import { HttpClient } from '@angular/common/http';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { FormDefinitionResponse } from '../models/form-definition.interface';
 import { FormFieldProcessorService } from '../../../shared/formly/form-field-processor.service';
-import { MOCK_FORM_DEFINITION } from '../mock-data/form-definitions.mock';
 import { delay, of, tap, catchError, map, finalize } from 'rxjs';
 
-/**
- * 🎯 Store con Signals - Angular 20 (Buenas Prácticas)
- *
- * Mejoras implementadas:
- * ✅ Signals privados con exposición readonly (encapsulación)
- * ✅ Computed signals para estados derivados
- * ✅ Manejo robusto de errores con signal
- * ✅ Timestamp de última actualización
- * ✅ Métodos útiles: retry(), reset(), getFieldByKey()
- * ✅ Estadísticas del formulario
- */
+// Store con Signals
 @Injectable({ providedIn: 'root' })
 export class FormDefinitionStore {
   private apiUrl = 'https://localhost:7261/api/DynamicForm/get-form-definition';
   private http = inject(HttpClient);
   private fieldProcessor = inject(FormFieldProcessorService);
 
-  // 🔒 Signals privados (solo escritura interna)
+  // Signals privados (solo escritura interna)
   private _formName = signal<string | null>(null);
   private _fields = signal<FormlyFieldConfig[]>([]);
   private _loading = signal(false);
@@ -32,7 +21,7 @@ export class FormDefinitionStore {
   private _formDefinitionId = signal<string | null>(null);
   private _version = signal<number>(1);
 
-  // 📤 Exposición pública readonly (buena práctica)
+  // Exposición pública readonly
   readonly formName = this._formName.asReadonly();
   readonly fields = this._fields.asReadonly();
   readonly loading = this._loading.asReadonly();
@@ -41,14 +30,14 @@ export class FormDefinitionStore {
   readonly formDefinitionId = this._formDefinitionId.asReadonly();
   readonly version = this._version.asReadonly();
 
-  // 🧮 Computed Signals (estados derivados reactivos)
+  // Computed Signals (estados derivados reactivos)
   readonly hasData = computed(() => this._fields().length > 0);
   readonly isEmpty = computed(() => this._fields().length === 0);
   readonly hasError = computed(() => this._error() !== null);
   readonly isReady = computed(() => !this._loading() && this.hasData() && !this.hasError());
   readonly fieldCount = computed(() => this.countAllFields(this._fields()));
 
-  // 📊 Estado consolidado (útil para debugging y UI compleja)
+  // Estado consolidado (útil para debugging y UI compleja)
   readonly formState = computed(() => ({
     id: this._formDefinitionId(),
     version: this._version(),
@@ -58,44 +47,43 @@ export class FormDefinitionStore {
     hasError: this.hasError(),
     errorMessage: this._error(),
     isReady: this.isReady(),
-    lastUpdated: this._lastUpdated()
+    lastUpdated: this._lastUpdated(),
   }));
 
-  // 📊 Estadísticas del formulario
+  // Estadísticas del formulario
   readonly formStats = computed(() => {
     const allFields = this.getAllFieldsRecursive(this._fields());
     return {
       total: allFields.length,
-      required: allFields.filter(f => f.props?.required).length,
-      optional: allFields.filter(f => !f.props?.required).length,
-      types: [...new Set(allFields.map(f => f.type).filter((t): t is string => typeof t === 'string'))],
+      required: allFields.filter((f) => f.props?.required).length,
+      optional: allFields.filter((f) => !f.props?.required).length,
+      types: [
+        ...new Set(allFields.map((f) => f.type).filter((t): t is string => typeof t === 'string')),
+      ],
     };
   });
 
-  /**
-   * 🔄 Carga la definición del formulario desde el servidor
-   * Los mensajes de validación se agregan automáticamente
-   */
-  loadFormDefinition(): void {
+  // Carga la definición del formulario desde el servidor
+  loadFormDefinition$() {
     this._loading.set(true);
     this._error.set(null);
 
-    this.http.get<FormDefinitionResponse>(this.apiUrl).pipe(
-      map(form => ({
+    return this.http.get<FormDefinitionResponse>(this.apiUrl).pipe(
+      map((form) => ({
         id: form.id,
         version: form.version || 1,
         formName: form.formName,
-        fields: this.fieldProcessor.processFields(form.fields)
+        fields: this.fieldProcessor.processFields(form.fields),
       })),
-      tap(result => {
+      tap((result) => {
         this._formDefinitionId.set(result.id || null);
         this._version.set(result.version);
         this._formName.set(result.formName);
         this._fields.set(result.fields);
         this._lastUpdated.set(new Date());
       }),
-      catchError(err => {
-        console.error('❌ Error al cargar el formulario:', err);
+      catchError((err) => {
+        console.error('Error al cargar el formulario:', err);
         this._error.set(
           err.status === 0
             ? 'No se pudo conectar al servidor. Verifique su conexión.'
@@ -104,52 +92,18 @@ export class FormDefinitionStore {
         return of(null);
       }),
       finalize(() => this._loading.set(false))
-    ).subscribe();
+    );
   }
 
-  /**
-   * 🧪 MODO DESARROLLO: Usa datos mock en lugar del servidor
-   * Útil para desarrollo sin necesidad de tener el backend corriendo
-   */
-  loadFormDefinitionMock(): void {
-    this._loading.set(true);
-    this._error.set(null);
-
-    of(MOCK_FORM_DEFINITION).pipe(
-      delay(1000),
-      map(form => ({
-        id: form.id,
-        version: form.version || 1,
-        formName: form.formName,
-        fields: this.fieldProcessor.processFields(form.fields)
-      })),
-      tap(result => {
-        this._formDefinitionId.set(result.id || null);
-        this._version.set(result.version);
-        this._formName.set(result.formName);
-        this._fields.set(result.fields);
-        this._lastUpdated.set(new Date());
-      }),
-      catchError(err => {
-        this._error.set('Error al cargar datos mock');
-        return of(null);
-      }),
-      finalize(() => this._loading.set(false))
-    ).subscribe();
-  }
-
-  /**
-   * 🔄 Reintentar después de un error
-   */
-  retry(): void {
+  // Reintentar después de un error
+  retry$() {
     if (!this._loading()) {
-      this.loadFormDefinition();
+      return this.loadFormDefinition$();
     }
+    return of(null);
   }
 
-  /**
-   * 🧹 Reset completo del estado
-   */
+  // Reset completo del estado
   reset(): void {
     this._formName.set(null);
     this._fields.set([]);
@@ -160,19 +114,15 @@ export class FormDefinitionStore {
     this._version.set(1);
   }
 
-  /**
-   * 🔍 Buscar un campo por key
-   */
+  // Buscar un campo por key
   getFieldByKey(key: string): FormlyFieldConfig | undefined {
-    return this._fields().find(f => f.key === key);
+    return this._fields().find((f) => f.key === key);
   }
 
-  /**
-   * ✏️ Actualizar un campo específico (útil para formularios dinámicos)
-   */
+  // Actualizar un campo específico
   updateField(key: string, updates: Partial<FormlyFieldConfig>): void {
     const fields = this._fields();
-    const index = fields.findIndex(f => f.key === key);
+    const index = fields.findIndex((f) => f.key === key);
 
     if (index !== -1) {
       const updatedFields = [...fields];
@@ -181,21 +131,14 @@ export class FormDefinitionStore {
     }
   }
 
-  /**
-   * 🔢 Cuenta todos los campos recursivamente (incluyendo los dentro de fieldGroups)
-   * @param fields Array de campos de Formly
-   * @returns Número total de campos con key (campos reales)
-   */
+  // Cuenta todos los campos recursivamente
   private countAllFields(fields: FormlyFieldConfig[]): number {
     let count = 0;
 
     for (const field of fields) {
-      // Si tiene fieldGroup, contar los campos internos recursivamente
       if (field.fieldGroup && field.fieldGroup.length > 0) {
         count += this.countAllFields(field.fieldGroup);
-      }
-      // Si tiene key (es un campo real), contarlo
-      else if (field.key) {
+      } else if (field.key) {
         count++;
       }
     }
@@ -203,21 +146,14 @@ export class FormDefinitionStore {
     return count;
   }
 
-  /**
-   * 📦 Obtiene todos los campos recursivamente (incluyendo los de fieldGroups)
-   * @param fields Array de campos de Formly
-   * @returns Array plano con todos los campos reales (que tienen key)
-   */
+  //  Obtiene todos los campos recursivamente
   private getAllFieldsRecursive(fields: FormlyFieldConfig[]): FormlyFieldConfig[] {
     const allFields: FormlyFieldConfig[] = [];
 
     for (const field of fields) {
-      // Si tiene fieldGroup, obtener los campos internos recursivamente
       if (field.fieldGroup && field.fieldGroup.length > 0) {
         allFields.push(...this.getAllFieldsRecursive(field.fieldGroup));
-      }
-      // Si tiene key (es un campo real), agregarlo
-      else if (field.key) {
+      } else if (field.key) {
         allFields.push(field);
       }
     }

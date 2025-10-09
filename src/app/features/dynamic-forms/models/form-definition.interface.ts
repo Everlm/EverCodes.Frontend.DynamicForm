@@ -1,8 +1,8 @@
 import { FormlyFieldConfig } from '@ngx-formly/core';
 
 export interface FormDefinitionResponse {
-  id?: string;                    // ID del formulario (opcional por ahora)
+  id?: string;
   formName: string;
-  version?: number;               // Versión del formulario (opcional por ahora)
+  version?: number;              
   fields: FormlyFieldConfig[];
 }

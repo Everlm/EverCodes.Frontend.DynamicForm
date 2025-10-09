@@ -2,27 +2,15 @@ import { Injectable } from '@angular/core';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { getValidationMessages } from './validation-messages';
 
-/**
- * Servicio para procesar campos de formulario que vienen del servidor
- * y agregarles automáticamente los mensajes de validación
- */
+//Servicio para procesar campos de formulario que vienen del servidor
 @Injectable({ providedIn: 'root' })
 export class FormFieldProcessorService {
-
-  /**
-   * Procesa un array de campos de formulario y les agrega los mensajes de validación
-   * basándose en las validaciones configuradas en props/templateOptions
-   *
-   * @param fields - Array de campos de formulario desde el servidor
-   * @returns Array de campos procesados con mensajes de validación
-   */
+  // Procesa un array de campos de formulario y les agrega los mensajes de validación
   processFields(fields: FormlyFieldConfig[]): FormlyFieldConfig[] {
-    return fields.map(field => this.processField(field));
+    return fields.map((field) => this.processField(field));
   }
 
-  /**
-   * Procesa un campo individual
-   */
+  //Procesa un campo individual
   private processField(field: FormlyFieldConfig): FormlyFieldConfig {
     // Si el campo ya tiene mensajes de validación personalizados, los respetamos
     if (field.validation?.messages) {
@@ -48,7 +36,11 @@ export class FormFieldProcessorService {
     }
 
     // Si el campo tiene fieldArray, procesar el template
-    if (field.fieldArray && typeof field.fieldArray === 'object' && 'fieldGroup' in field.fieldArray) {
+    if (
+      field.fieldArray &&
+      typeof field.fieldArray === 'object' &&
+      'fieldGroup' in field.fieldArray
+    ) {
       const fieldArray = field.fieldArray as FormlyFieldConfig;
       if (fieldArray.fieldGroup) {
         fieldArray.fieldGroup = this.processFields(fieldArray.fieldGroup);
@@ -58,10 +50,7 @@ export class FormFieldProcessorService {
     return field;
   }
 
-  /**
-   * Detecta automáticamente qué validaciones tiene un campo
-   * basándose en props/templateOptions
-   */
+  // Detecta automáticamente qué validaciones tiene un campo basándose en props templateOptions
   private detectValidations(field: FormlyFieldConfig): string[] {
     const validations: string[] = [];
     const props = field.props || field.templateOptions || {};
@@ -97,7 +86,7 @@ export class FormFieldProcessorService {
 
     // Si el campo tiene validators personalizados, también los incluimos
     if (field.validators) {
-      Object.keys(field.validators).forEach(validatorName => {
+      Object.keys(field.validators).forEach((validatorName) => {
         if (!validations.includes(validatorName)) {
           validations.push(validatorName);
         }
@@ -107,15 +96,12 @@ export class FormFieldProcessorService {
     return validations;
   }
 
-  /**
-   * Método alternativo: procesar y permitir sobrescribir mensajes desde el servidor
-   * Útil cuando el servidor envía algunos mensajes personalizados
-   */
+  // Método alternativo: procesar y permitir sobrescribir mensajes desde el servidor
   processFieldsWithServerMessages(
     fields: FormlyFieldConfig[],
     serverMessages?: { [fieldKey: string]: { [validationKey: string]: string } }
   ): FormlyFieldConfig[] {
-    return fields.map(field => {
+    return fields.map((field) => {
       const processedField = this.processField(field);
 
       // Si hay mensajes del servidor para este campo, sobrescribirlos

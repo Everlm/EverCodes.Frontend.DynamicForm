@@ -1,6 +1,4 @@
-// validation-messages.ts
 // Mensajes de validación centralizados y reutilizables
-
 export const ValidationMessages = {
   required: 'Este campo es obligatorio',
   email: 'Formato de correo inválido',
@@ -13,12 +11,7 @@ export const ValidationMessages = {
   pattern: (message?: string) => message || 'El formato no es válido',
 };
 
-/**
- * Helper para generar mensajes de validación para un campo
- * @param validations - Array de nombres de validaciones necesarias
- * @param props - Propiedades del campo (para valores dinámicos)
- * @returns Objeto con los mensajes de validación
- */
+// Genera mensajes de validación para un campo
 export function getValidationMessages(
   validations: string[],
   props?: any

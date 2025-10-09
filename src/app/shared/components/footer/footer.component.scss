@@ -1,5 +1,5 @@
 footer {
-  // 🌊 Liquid Glass Effect (Gris Moderno)
+  // Liquid Glass Effect (Gris Moderno)
   background: rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(40px) saturate(180%);
   -webkit-backdrop-filter: blur(40px) saturate(180%);
@@ -145,7 +145,7 @@ footer {
   }
 }
 
-// 📱 Responsive
+// Responsive
 @media (max-width: 768px) {
   footer {
     padding: 2rem 1rem 1rem;
@@ -175,7 +175,7 @@ footer {
   }
 }
 
-// 🎨 Animación de entrada
+// Animación de entrada
 @keyframes fadeInFooter {
   from {
     opacity: 0;

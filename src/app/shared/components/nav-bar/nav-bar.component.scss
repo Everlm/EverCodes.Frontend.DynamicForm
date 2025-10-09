@@ -1,5 +1,5 @@
 nav {
-  // 🌊 Liquid Glass Effect (Gris Moderno)
+  // Liquid Glass Effect (Gris Moderno)
   background: rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(40px) saturate(180%);
   -webkit-backdrop-filter: blur(40px) saturate(180%);
@@ -201,7 +201,7 @@ nav {
   }
 }
 
-// 🌈 Efecto de brillo al hacer scroll (opcional)
+// Efecto de brillo al hacer scroll (opcional)
 nav.scrolled {
   background: rgba(255, 255, 255, 0.12);
   backdrop-filter: blur(50px) saturate(200%);
@@ -212,7 +212,7 @@ nav.scrolled {
     inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
-// 📱 Responsive
+// Responsive
 @media (max-width: 768px) {
   nav {
     padding: 1rem;
@@ -239,7 +239,7 @@ nav.scrolled {
   }
 }
 
-// 🎨 Animación de entrada suave
+// Animación de entrada suave
 @keyframes fadeInGlass {
   from {
     opacity: 0;
