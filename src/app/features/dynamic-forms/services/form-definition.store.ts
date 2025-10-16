@@ -1,14 +1,14 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormlyFieldConfig } from '@ngx-formly/core';
-import { FormDefinitionResponse } from '../models/form-definition.interface';
+import { FormlyFormResponse } from '../models/form-definition.interface';
 import { FormFieldProcessorService } from '../../../shared/formly/form-field-processor.service';
 import { delay, of, tap, catchError, map, finalize } from 'rxjs';
 
 // Store con Signals
 @Injectable({ providedIn: 'root' })
 export class FormDefinitionStore {
-  private apiUrl = 'https://localhost:7261/api/DynamicForm/get-form-definition';
+  private apiUrl = 'https://localhost:7261/api/dynamic-forms/sample';
   private http = inject(HttpClient);
   private fieldProcessor = inject(FormFieldProcessorService);
 
@@ -68,17 +68,22 @@ export class FormDefinitionStore {
     this._loading.set(true);
     this._error.set(null);
 
-    return this.http.get<FormDefinitionResponse>(this.apiUrl).pipe(
-      map((form) => ({
-        id: form.id,
-        version: form.version || 1,
-        formName: form.formName,
-        fields: this.fieldProcessor.processFields(form.fields),
-      })),
+    return this.http.get<FormlyFormResponse>(this.apiUrl).pipe(
+      map((response) => {
+        const formlyFields = this.fieldProcessor.convertBackendFieldsToFormly(response.fields);
+        const processedFields = this.fieldProcessor.processFields(formlyFields);
+
+        return {
+          id: response.id,
+          name: response.name,
+          description: response.description,
+          fields: processedFields,
+        };
+      }),
       tap((result) => {
         this._formDefinitionId.set(result.id || null);
-        this._version.set(result.version);
-        this._formName.set(result.formName);
+        this._version.set(1);
+        this._formName.set(result.name);
         this._fields.set(result.fields);
         this._lastUpdated.set(new Date());
       }),

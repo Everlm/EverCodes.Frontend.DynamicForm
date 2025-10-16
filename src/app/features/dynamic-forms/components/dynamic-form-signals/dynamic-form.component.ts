@@ -77,7 +77,7 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (result) => {
           if (result) {
-            console.log('Formulario cargado:', result.formName);
+            console.log('Formulario cargado:', result.name);
           }
         },
         error: (err) => {
@@ -106,7 +106,7 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (result) => {
           if (result) {
-            console.log('Reintento exitoso:', result.formName);
+            console.log('Reintento exitoso:', result.name);
           }
         },
         error: (err) => {

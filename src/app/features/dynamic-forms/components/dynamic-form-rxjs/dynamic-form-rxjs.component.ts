@@ -73,6 +73,12 @@ export class DynamicFormRxjsComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       this.showLoading$.next(false);
     }, this.minimumLoadingTime);
+
+    // Imprimir los fields cuando cambien
+    this.fields$.pipe(takeUntil(this.destroy$)).subscribe((fields) => {
+      console.log('📋 Fields recibidos:', fields);
+      console.log('📋 Fields JSON:', JSON.stringify(fields, null, 2));
+    });
   }
 
   ngOnDestroy(): void {
@@ -104,7 +110,7 @@ export class DynamicFormRxjsComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (result) => {
           if (result) {
-            console.log('Formulario cargado:', result.formName);
+            console.log('Formulario cargado:', result.name);
           }
         },
         error: (err) => {

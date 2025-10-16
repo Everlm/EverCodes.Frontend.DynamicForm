@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, catchError, map, finalize, of, delay, tap } from 'rxjs';
 import { FormlyFieldConfig } from '@ngx-formly/core';
-import { FormDefinitionResponse } from '../models/form-definition.interface';
+import { FormlyFormResponse } from '../models/form-definition.interface';
 import { FormFieldProcessorService } from '../../../shared/formly/form-field-processor.service';
 
 /**
@@ -13,7 +13,7 @@ import { FormFieldProcessorService } from '../../../shared/formly/form-field-pro
  */
 @Injectable({ providedIn: 'root' })
 export class FormDefinitionRxjsService {
-  private apiUrl = 'https://localhost:7261/api/DynamicForm/get-form-definition';
+  private apiUrl = 'https://localhost:7261/api/dynamic-forms/sample';
   private http = inject(HttpClient);
   private fieldProcessor = inject(FormFieldProcessorService);
 
@@ -93,19 +93,30 @@ export class FormDefinitionRxjsService {
   }
 
   // Observable que emite la definición del formulario
-  loadFormDefinition$(): Observable<FormDefinitionResponse | null> {
+  loadFormDefinition$(): Observable<FormlyFormResponse | null> {
     this._loading$.next(true);
     this._error$.next(null);
-    return this.http.get<FormDefinitionResponse>(this.apiUrl).pipe(
+    return this.http.get<FormlyFormResponse>(this.apiUrl).pipe(
       // Transforma los valores del stream
-      map((form) => ({
-        formName: form.formName,
-        fields: this.fieldProcessor.processFields(form.fields),
-      })),
+      map((response) => {
+        const formlyFields = this.fieldProcessor.convertBackendFieldsToFormly(response.fields);
+        const processedFields = this.fieldProcessor.processFields(formlyFields);
+
+        return {
+          id: response.id,
+          name: response.name,
+          description: response.description,
+          fields: response.fields,
+        };
+      }),
       // Efectos secundarios para actualizar el estado
       tap((result) => {
-        this._formName$.next(result.formName);
-        this._fields$.next(result.fields);
+        // Guardar el nombre del formulario
+        this._formName$.next(result.name);
+        // Convertir y procesar los campos
+        const formlyFields = this.fieldProcessor.convertBackendFieldsToFormly(result.fields);
+        const processedFields = this.fieldProcessor.processFields(formlyFields);
+        this._fields$.next(processedFields);
         this._lastUpdated$.next(new Date());
       }),
       // Manejo de errores
