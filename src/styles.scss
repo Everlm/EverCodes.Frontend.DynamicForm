@@ -104,3 +104,24 @@ body {
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+// Estilos para dropdowns de Material Select (fondo blanco)
+.mat-mdc-select-panel {
+  background-color: white !important;
+}
+
+.mat-mdc-option {
+  background-color: white !important;
+
+  &:hover:not(.mdc-list-item--disabled) {
+    background-color: rgba(71, 85, 105, 0.08) !important;
+  }
+
+  &.mat-mdc-option-active {
+    background-color: rgba(71, 85, 105, 0.12) !important;
+  }
+
+  &.mdc-list-item--selected:not(.mdc-list-item--disabled) {
+    background-color: rgba(71, 85, 105, 0.15) !important;
+  }
+}

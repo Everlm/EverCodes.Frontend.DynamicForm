@@ -28,6 +28,13 @@ export class FormFieldProcessorService {
           : undefined,
     };
 
+    // Si el backend envía mensajes de validación personalizados, incluirlos
+    if (backendField.validation?.messages && Object.keys(backendField.validation.messages).length > 0) {
+      formlyField.validation = {
+        messages: backendField.validation.messages,
+      };
+    }
+
     // Convertir las props si existen
     if (backendField.props) {
       formlyField.props = {

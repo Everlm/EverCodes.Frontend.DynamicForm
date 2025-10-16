@@ -6,6 +6,15 @@ export interface FormlyFormResponse {
   fields: FormlyFieldConfigResponse[];
 }
 
+export interface FormlyFieldValidationResponse {
+  id: string;
+  formlyFieldConfigId: string;
+  name: string;
+  messages: { [key: string]: string };
+  show: boolean;
+  formlyFieldConfig: any;
+}
+
 export interface FormlyFieldConfigResponse {
   id: string;
   parentId: string | null;
@@ -20,7 +29,7 @@ export interface FormlyFieldConfigResponse {
   hide: boolean;
   resetOnHide: boolean;
   focus: boolean;
-  validation: any;
+  validation: FormlyFieldValidationResponse | null;
   validator: any;
   props: FormlyFieldPropsResponse | null;
   formlyForm: any;
