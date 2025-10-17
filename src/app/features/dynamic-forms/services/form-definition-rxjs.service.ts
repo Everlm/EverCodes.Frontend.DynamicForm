@@ -13,7 +13,7 @@ import { FormFieldProcessorService } from '../../../shared/formly/form-field-pro
  */
 @Injectable({ providedIn: 'root' })
 export class FormDefinitionRxjsService {
-  private apiUrl = 'https://localhost:7261/api/dynamic-forms/sample';
+  private apiUrl = 'http://localhost:5059/api/dynamic-forms/sample-dto';
   private http = inject(HttpClient);
   private fieldProcessor = inject(FormFieldProcessorService);
 

@@ -8,7 +8,7 @@ import { delay, of, tap, catchError, map, finalize } from 'rxjs';
 // Store con Signals
 @Injectable({ providedIn: 'root' })
 export class FormDefinitionStore {
-  private apiUrl = 'https://localhost:7261/api/dynamic-forms/sample';
+  private apiUrl = 'http://localhost:5059/api/dynamic-forms/sample';
   private http = inject(HttpClient);
   private fieldProcessor = inject(FormFieldProcessorService);
 
